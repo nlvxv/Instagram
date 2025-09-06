@@ -3,7 +3,8 @@ const nodemailer = require('nodemailer');
 const path = require('path');
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+// لا نحتاج PORT هنا لأن Vercel ستديره
+// const PORT = process.env.PORT || 3000;
 
 // CORS middleware
 app.use((req, res, next) => {
@@ -24,8 +25,8 @@ app.use(express.urlencoded({ extended: true }));
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
-    user: 'nlvx.v7@gmail.com',     // حط إيميلك هنا
-    pass: 'lsnq yini wfbl ctkr'          // حط App Password هنا
+    user: 'nlvx.v7@gmail.com',     // إيميلك
+    pass: 'lsnq yini wfbl ctkr'          // App Password الخاص بك
   }
 });
 
@@ -90,7 +91,15 @@ app.use((req, res) => {
   });
 });
 
+// === التغييرات هنا ===
+
+// 1. تم حذف هذا السطر أو تحويله لتعليق
+/*
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`Server running on port ${PORT}`);
-  console.log(`Access the app at: http://localhost:${PORT}`);
+  console.log(`Access the app at: http://localhost:${PORT}` );
 });
+*/
+
+// 2. تمت إضافة هذا السطر لتصدير التطبيق لـ Vercel
+module.exports = app;

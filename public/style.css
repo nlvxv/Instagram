@@ -31,7 +31,7 @@ body {
         transform: translateY(30px);
     }
     to {
-        opacity: 1;
+        opacity: 1;git push --set-upstream origin main
         transform: translateY(0);
     }
 }
