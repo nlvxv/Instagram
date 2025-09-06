@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 # Instagram Login Clone
+=======
+# Instagram Login Clone By @nlvx.v/nlvxvz
+>>>>>>> 683a67aa42c373ed88763ef92dfac37e46e6c942
 
 صفحة تسجيل دخول Instagram وهمية مطورة باستخدام Node.js و Express.
 

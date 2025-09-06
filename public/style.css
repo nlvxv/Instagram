@@ -31,7 +31,11 @@ body {
         transform: translateY(30px);
     }
     to {
+<<<<<<< HEAD
         opacity: 1;git push --set-upstream origin main
+=======
+        opacity: 1;
+>>>>>>> 683a67aa42c373ed88763ef92dfac37e46e6c942
         transform: translateY(0);
     }
 }
