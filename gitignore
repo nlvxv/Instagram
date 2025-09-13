@@ -62,3 +62,18 @@ jspm_packages/
 ehthumbs.db
 Thumbs.db
 
+
+# Production builds
+dist/
+build/
+
+# Application logs
+login_attempts.log
+
+# Vercel
+.vercel
+
+# Temporary files
+tmp/
+temp/
+
